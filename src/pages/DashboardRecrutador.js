@@ -1,18 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const DashboardRecrutador = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const recrutadorId = location.state && location.state.recrutadorId;
     const [vagasCadastradas, setVagasCadastradas] = useState([]);
     const [vagasAbertas, setVagasAbertas] = useState([]);
     const [vagasEncerradas, setVagasEncerradas] = useState([]);
 
+    const handleCadastrarVagaClick = () => {
+        navigate(`/vagas_recrutador`, { state: { recrutadorId } });
+    };
+
+    const navigateToVagasRecrutador = (recrutadorId) => {
+        navigate(`/matchs`, { state: { recrutadorId } });
+    };
+
     useEffect(() => {
 
         const carregarVagas = async () => {
             try {
-    
+
                 const response = await fetch(`https://app-matchwork-fb428e5e6c00.herokuapp.com/api/matchwork/recrutadores/${recrutadorId}/vagas`);
                 if (!response.ok) {
                     throw new Error(`Erro: ${response.status}`);
@@ -76,10 +85,13 @@ const DashboardRecrutador = () => {
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link text-white" to="/matchs">
-                                <i className="fas fa-handshake"></i> Matchs
-                            </Link>
-                        </li>
+                        <button
+                            className="nav-link text-white"
+                            onClick={() => navigateToVagasRecrutador(recrutadorId)}>
+                            <i className="fas fa-suitcase"></i> matchs
+                        </button>
+        
+                    </li>
                         <li className="nav-item">
                             <Link className="nav-link text-white" to="/vagas_recrutador">
                                 <i className="fas fa-suitcase"></i> Vagas
@@ -129,7 +141,9 @@ const DashboardRecrutador = () => {
                                     </div>
                                 </div>
                                 <div className="d-grid gap-2 text-center">
-                                    <Link to="/vagas_recrutador"><button className="btn btn-primary mt-4" type="button">Clique aqui para cadastrar uma nova vaga</button></Link>
+                                    <button className="btn btn-primary mt-4" type="button" onClick={handleCadastrarVagaClick}>
+                                        Clique aqui para cadastrar uma nova vaga
+                                    </button>
                                 </div>
                             </div>
                         </div>

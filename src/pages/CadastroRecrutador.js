@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CadastroRecrutador = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -12,10 +14,10 @@ const CadastroRecrutador = () => {
             nome: formData.get('nome'),
             empresa: formData.get('empresa'),
             email: formData.get('email'),
+            login: formData.get('email'),
             telefone: formData.get('telefone'),
             cnpj: formData.get('cnpj'),
-            login: formData.get('login'),
-            senha: formData.get('senha'),
+            senha: formData.get('senha')
         };
 
         try {
@@ -31,12 +33,13 @@ const CadastroRecrutador = () => {
                 throw new Error(`Erro: ${response.status}`);
             }
 
+            const data = await response.json();
+
             setErrorMessage('');
             setSuccessMessage('Cadastro de recrutador realizado com sucesso. Redirecionando para o Dashboard...');
 
-            // Redirecionar para a página de dashboard do recrutador após 2 segundos
             setTimeout(() => {
-                window.location.href = '/dashboard_recrutador';
+                navigate('/dashboard_recrutador', { state: { recrutadorId: data.id } });
             }, 2000);
 
         } catch (error) {
@@ -58,16 +61,13 @@ const CadastroRecrutador = () => {
                         <input name="empresa" className="form-control" placeholder="Nome da Empresa" required />
                     </div>
                     <div className="mb-3">
-                        <input name="email" className="form-control" type="email" placeholder="E-mail" required />
+                        <input name="email" className="form-control" type="email" placeholder="E-mail (usado como login)" required />
                     </div>
                     <div className="mb-3">
                         <input name="telefone" className="form-control" placeholder="Telefone" required />
                     </div>
                     <div className="mb-3">
                         <input name="cnpj" className="form-control" placeholder="CNPJ" required />
-                    </div>
-                    <div className="mb-3">
-                        <input name="login" className="form-control" placeholder="Login" required />
                     </div>
                     <div className="mb-3">
                         <input name="senha" className="form-control" type="password" placeholder="Senha" required />

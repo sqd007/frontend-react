@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const CadastroVaga = () => {
     const location = useLocation();
+    const navigate = useNavigate(); 
     const recrutadorId = location.state && location.state.recrutadorId;
     const [vaga, setVaga] = useState({
         titulo: '',
@@ -11,11 +13,8 @@ const CadastroVaga = () => {
         competenciasComportamentais: [],
     });
     const [competencias, setCompetencias] = useState([]);
-    const [competenciasTecnicasSelecionadas, setCompetenciasTecnicasSelecionadas] = useState([]);
-    const [competenciasComportamentaisSelecionadas, setCompetenciasComportamentaisSelecionadas] = useState([]);
     const [vagasExistentes, setVagasExistentes] = useState([]);
 
-    // Carregar competências a partir da API
     useEffect(() => {
         const carregarCompetencias = async () => {
             try {
@@ -32,7 +31,6 @@ const CadastroVaga = () => {
         carregarCompetencias();
     }, []);
 
-    // Carregar vagas existentes a partir da API
     useEffect(() => {
         const carregarVagasExistentes = async () => {
             try {
@@ -51,12 +49,11 @@ const CadastroVaga = () => {
         }
     }, [recrutadorId]);
 
-    // Função para adicionar vaga
     const adicionarVaga = async (event) => {
         event.preventDefault();
 
-        if (competenciasTecnicasSelecionadas.length < 3 || competenciasComportamentaisSelecionadas.length < 3) {
-            alert('Selecione pelo menos 3 competências técnicas e 3 competências comportamentais.');
+        if (vaga.competenciasTecnicas.length === 0 || vaga.competenciasComportamentais.length === 0) {
+            alert('Selecione pelo menos uma competência técnica e uma competência comportamental.');
             return;
         }
 
@@ -69,8 +66,7 @@ const CadastroVaga = () => {
                 body: JSON.stringify({
                     titulo: vaga.titulo,
                     descricao: vaga.descricao,
-                    competenciasTecnicas: competenciasTecnicasSelecionadas,
-                    competenciasComportamentais: competenciasComportamentaisSelecionadas,
+                    competencias: [...vaga.competenciasTecnicas, ...vaga.competenciasComportamentais],
                 }),
             });
             if (!response.ok) {
@@ -83,14 +79,97 @@ const CadastroVaga = () => {
             }
             const vagasData = await vagasResponse.json();
             setVagasExistentes(vagasData);
+            setVaga({
+                titulo: '',
+                descricao: '',
+                competenciasTecnicas: [],
+                competenciasComportamentais: [],
+            });
         } catch (error) {
             console.error('Erro ao cadastrar vaga:', error);
         }
     };
 
+    const handleCompetenciaTecnicaChange = (competenciaId) => {
+        const competenciasTecnicas = vaga.competenciasTecnicas.includes(competenciaId)
+            ? vaga.competenciasTecnicas.filter((id) => id !== competenciaId)
+            : [...vaga.competenciasTecnicas, competenciaId];
+        setVaga({ ...vaga, competenciasTecnicas });
+    };
+
+    const handleCompetenciaComportamentalChange = (competenciaId) => {
+        const competenciasComportamentais = vaga.competenciasComportamentais.includes(competenciaId)
+            ? vaga.competenciasComportamentais.filter((id) => id !== competenciaId)
+            : [...vaga.competenciasComportamentais, competenciaId];
+        setVaga({ ...vaga, competenciasComportamentais });
+    };
+
+    const editarVaga = (recrutadorId, vagaId) => {
+        navigate(`/vaga_editar/${recrutadorId}/${vagaId}`);
+    };
+
     return (
         <div>
-            {/* ...código do navbar... */}
+            <nav className="navbar navbar-expand-lg navbar-light bg-light shadow">
+                <div className="container-fluid">
+                    <button className="btn btn-primary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
+                        <i className="fas fa-bars"></i>
+                        Menu
+                    </button>
+                    <Link className="navbar-brand" to="/">
+                        <img src="/img/logo.png" className="img-fluid" style={{ width: '40px', height: '40px', objectFit: 'cover' }} alt="Matchwork" />
+                        Matchwork
+                    </Link>
+                    <div className="d-flex flex-row">
+                        <ul className="navbar-nav d-flex flex-row">
+                            <li className="nav-item me-3">
+                                <a className="nav-link" href="#">
+                                    <i className="fas fa-bell"></i>
+                                </a>
+                            </li>
+                            <li className="nav-item me-3">
+                                <a className="nav-link" href="#">
+                                    <i className="fas fa-cog"></i>
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <img src="/img/recrutadora.png" alt="Foto do Usuário" className="img-fluid rounded-circle" style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <nav id="sidebar" className="col-md-3 col-lg-2 bg-primary vh-100 text-white offcanvas offcanvas-start" tabIndex="-1">
+                <div className="position-sticky">
+                    <ul className="nav flex-column mt-4">
+                        <li className="nav-item">
+                            <Link className="nav-link text-white" to="/dashboard_recrutador">
+                                <i className="fas fa-home"></i> Início
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link text-white" to="/matchs">
+                                <i className="fas fa-handshake"></i> Matchs
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link text-white" to="/vagas_recrutador">
+                                <i className="fas fa-suitcase"></i> Vagas
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link text-white" to="/dicas">
+                                <i className="fas fa-lightbulb"></i> Dicas
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link text-white" to="/login">
+                                <i className="fas fa-sign-out-alt"></i> Sair
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
 
             <div className="container mt-5 mb-5">
                 <h2 className="mb-4 text-center">Gerencie suas vagas</h2>
@@ -118,59 +197,61 @@ const CadastroVaga = () => {
                                 rows="3"
                                 value={vaga.descricao}
                                 onChange={(e) => setVaga({ ...vaga, descricao: e.target.value })}
-                                required
                             ></textarea>
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="competenciasTecnicas" className="form-label">Competências Técnicas (selecione pelo menos 3)</label>
-                            <select
-                                multiple
-                                className="form-select"
-                                id="competenciasTecnicas"
-                                value={competenciasTecnicasSelecionadas}
-                                onChange={(e) => setCompetenciasTecnicasSelecionadas(Array.from(e.target.selectedOptions, (option) => option.value))}
-                                required
-                            >
-                                {competencias
-                                    .filter((competencia) => competencia.tipo === 'TECNICA')
-                                    .map((competencia) => (
-                                        <option key={competencia.id} value={competencia.id}>
-                                            {competencia.nome}
-                                        </option>
-                                    ))}
-                            </select>
+                            <label className="form-label">Competências Técnicas (selecione pelo menos uma)</label>
+                            {competencias
+                                .filter((competencia) => competencia.tipo === 'TECNICA')
+                                .map((competencia) => (
+                                    <div className="form-check" key={competencia.id}>
+                                        <input
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            value={competencia.id}
+                                            checked={vaga.competenciasTecnicas.includes(competencia.id)}
+                                            onChange={() => handleCompetenciaTecnicaChange(competencia.id)}
+                                        />
+                                        <label className="form-check-label">{competencia.nome}</label>
+                                    </div>
+                                ))}
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="competenciasComportamentais" className="form-label">Competências Comportamentais (selecione pelo menos 3)</label>
-                            <select
-                                multiple
-                                className="form-select"
-                                id="competenciasComportamentais"
-                                value={competenciasComportamentaisSelecionadas}
-                                onChange={(e) => setCompetenciasComportamentaisSelecionadas(Array.from(e.target.selectedOptions, (option) => option.value))}
-                                required
-                            >
-                                {competencias
-                                    .filter((competencia) => competencia.tipo === 'COMPORTAMENTAL')
-                                    .map((competencia) => (
-                                        <option key={competencia.id} value={competencia.id}>
-                                            {competencia.nome}
-                                        </option>
-                                    ))}
-                            </select>
+                            <label className="form-label">Competências Comportamentais (selecione pelo menos uma)</label>
+                            {competencias
+                                .filter((competencia) => competencia.tipo === 'COMPORTAMENTAL')
+                                .map((competencia) => (
+                                    <div className="form-check" key={competencia.id}>
+                                        <input
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            value={competencia.id}
+                                            checked={vaga.competenciasComportamentais.includes(competencia.id)}
+                                            onChange={() => handleCompetenciaComportamentalChange(competencia.id)}
+                                        />
+                                        <label className="form-check-label">{competencia.nome}</label>
+                                    </div>
+                                ))}
                         </div>
-                        <button type="submit" className="btn btn-primary">Adicionar Vaga</button>
+                        <button type="submit" className="btn btn-primary">
+                            Gravar Vaga
+                        </button>
                     </form>
                 </div>
                 <h4>Vagas existentes</h4>
                 <div className="row">
                     {vagasExistentes.map((vagaExistente) => (
-                        <div className="col-md-4" key={vagaExistente.id}>
-                            <div className="card mb-4">
-                                <div className="card-body">
+                        <div className="col-md-4 mb-4" key={vagaExistente.id}>
+                            <div className="card h-100">
+                                <div className="card-body d-flex flex-column">
                                     <h5 className="card-title">{vagaExistente.titulo}</h5>
-                                    <p className="card-text">{vagaExistente.descricao}</p>
-                                    <Link to="#" className="btn btn-primary">Editar</Link>
+                                    <p className="card-text flex-grow-1 overflow-hidden">{vagaExistente.descricao}</p>
+                                    <button
+                                        className="btn btn-primary mt-2"
+                                        onClick={() => editarVaga(recrutadorId, vagaExistente.id)}
+                                    >
+                                        Editar
+                                    </button>
                                 </div>
                             </div>
                         </div>

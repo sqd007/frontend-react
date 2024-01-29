@@ -12,6 +12,8 @@ import CadastroRecrutador from './pages/CadastroRecrutador';
 import DashboardCandidato from './pages/DashboardCandidato';
 import DashboardRecrutador from './pages/DashboardRecrutador';
 import CadastroVaga from './pages/CadastroVaga';
+import EditarVaga from './pages/EditarVaga';
+import VagaMatchs from './pages/VagaMatch';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
         <Route path='/dashboard_recrutador' element={<DashboardRecrutador />} />
         <Route path='/dashboard_recrutador' element={<DashboardRecrutador />} />
         <Route path='/vagas_recrutador' element={<CadastroVaga />} />
+        <Route path='/vaga_editar/:recrutadorId/:vagaId' element={<EditarVaga />} />
+        <Route path='/matchs' element={<VagaMatchs />} />
       </Routes>
       <Footer />
     </>

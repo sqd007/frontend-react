@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CadastroCandidato = () => {
     const [competencias, setCompetencias] = useState([]);
     const [competenciasSelecionadas, setCompetenciasSelecionadas] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [candidatoId, setCandidatoId] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch('https://app-matchwork-fb428e5e6c00.herokuapp.com/api/matchwork/competencias')
@@ -34,10 +37,10 @@ const CadastroCandidato = () => {
         const candidato = {
             nome: formData.get('nome'),
             email: formData.get('email'),
+            login: formData.get('email'),
             telefone: formData.get('telefone'),
             cpf: formData.get('cpf'),
-            login: formData.get('login'),
-            senha: formData.get('senha'),
+            senha: formData.get('senha'), 
             competencias: competenciasSelecionadas
         };
 
@@ -54,12 +57,9 @@ const CadastroCandidato = () => {
                 throw new Error(`Erro: ${response.status}`);
             }
 
-            setErrorMessage('');
-            setSuccessMessage('Cadastro realizado com sucesso. Redirecionando para o Dashboard...');
+            const data = await response.json();
 
-            setTimeout(() => {
-                window.location.href = '/dashboard_candidato';
-            }, 2000);
+            setCandidatoId(data.id);
 
         } catch (error) {
             setErrorMessage('Falha ao enviar dados. Por favor, tente novamente.');
@@ -67,6 +67,17 @@ const CadastroCandidato = () => {
             console.error('Falha ao enviar dados:', error);
         }
     };
+
+    useEffect(() => {
+        if (candidatoId !== null) {
+            setErrorMessage('');
+            setSuccessMessage('Cadastro realizado com sucesso. Redirecionando para o Dashboard...');
+
+            setTimeout(() => {
+                navigate(`/dashboard_candidato`, { state: { candidatoId } });
+            }, 2000);
+        }
+    }, [candidatoId, navigate]);
 
     return (
         <div className="container d-flex justify-content-center mt-5 mb-5">
@@ -77,16 +88,13 @@ const CadastroCandidato = () => {
                         <input name="nome" className="form-control" placeholder="Nome completo" required />
                     </div>
                     <div className="mb-3">
-                        <input name="email" className="form-control" type="email" placeholder="E-mail" required />
+                        <input name="email" className="form-control" type="email" placeholder="E-mail (usado como login)" required />
                     </div>
                     <div className="mb-3">
                         <input name="telefone" className="form-control" placeholder="Telefone" required />
                     </div>
                     <div className="mb-3">
                         <input name="cpf" className="form-control" placeholder="CPF" required />
-                    </div>
-                    <div className="mb-3">
-                        <input name="login" className="form-control" placeholder="Login" required />
                     </div>
                     <div className="mb-3">
                         <input name="senha" className="form-control" type="password" placeholder="Senha" required />
