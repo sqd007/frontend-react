@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Routes, Route } from "react-router-dom";
+import Home from './pages/Home';
+import About from './pages/About';
+import ContatoPage from './pages/ContatoPage';
+import Header from './components/header/Header';
+import Footer from './components/footer/Footer';
+import Login from './pages/Login';
+import Cadastro from './pages/Cadastro';
+import CadastroCandidato from './pages/CadastroCandidato';
+import CadastroRecrutador from './pages/CadastroRecrutador';
+import DashboardCandidato from './pages/DashboardCandidato';
+import DashboardRecrutador from './pages/DashboardRecrutador';
+import CadastroVaga from './pages/CadastroVaga';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/sobre" element={<About />} />
+        <Route path="/contato" element={<ContatoPage />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/cadastro' element={<Cadastro />} />
+        <Route path='/cadastro_candidato' element={<CadastroCandidato />} />
+        <Route path='/cadastro_recrutador' element={<CadastroRecrutador />} />
+        <Route path='/dashboard_candidato' element={<DashboardCandidato />} />
+        <Route path='/dashboard_recrutador' element={<DashboardRecrutador />} />
+        <Route path='/dashboard_recrutador' element={<DashboardRecrutador />} />
+        <Route path='/vagas_recrutador' element={<CadastroVaga />} />
+      </Routes>
+      <Footer />
+    </>
   );
 }
 

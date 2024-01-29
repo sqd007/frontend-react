@@ -1,0 +1,43 @@
+ style.css 
+
+:root {
+    --azul-escuro-principal: #004AAD;
+    --azul-claro-secundaria: #55D0C2;
+}
+
+/*.back-about {
+    background-image: url('./logo.png');
+    width: 100%;
+    height: 300px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}*/
+
+.text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    50% {
+        border-right-color: transparent;
+    }
+}
+
+.h1-typing {
+    border-right: 2px solid;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+    animation: typing 4s steps(40, end) forwards, blink 1s step-end infinite;
+}
