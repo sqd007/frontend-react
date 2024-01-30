@@ -13,7 +13,7 @@ const EditarVaga = () => {
     useEffect(() => {
         const carregarVaga = async () => {
             try {
-                const response = await fetch(`https://app-matchwork-fb428e5e6c00.herokuapp.com/api/matchwork/recrutadores/${recrutadorId}/vagas/${vagaId}`);
+                const response = await fetch(`http://localhost:8080/api/matchwork/recrutadores/${recrutadorId}/vagas/${vagaId}`);
                 if (!response.ok) {
                     throw new Error(`Erro: ${response.status}`);
                 }
@@ -33,7 +33,7 @@ const EditarVaga = () => {
 
     const salvarAlteracoes = async () => {
         try {
-            const response = await fetch(`https://app-matchwork-fb428e5e6c00.herokuapp.com/api/matchwork/recrutadores/${recrutadorId}/vagas/${vagaId}`, {
+            const response = await fetch(`http://localhost:8080/api/matchwork/recrutadores/${recrutadorId}/vagas/${vagaId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

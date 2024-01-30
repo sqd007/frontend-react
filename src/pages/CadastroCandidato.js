@@ -10,7 +10,7 @@ const CadastroCandidato = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('https://app-matchwork-fb428e5e6c00.herokuapp.com/api/matchwork/competencias')
+        fetch('http://localhost:8080/api/matchwork/competencias')
             .then(response => response.json())
             .then(data => setCompetencias(data))
             .catch(error => console.error('Erro ao carregar competências:', error));
@@ -45,7 +45,7 @@ const CadastroCandidato = () => {
         };
 
         try {
-            const response = await fetch('https://app-matchwork-fb428e5e6c00.herokuapp.com/api/matchwork/candidatos', {
+            const response = await fetch('http://localhost:8080/api/matchwork/candidatos', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -18,7 +18,7 @@ const CadastroVaga = () => {
     useEffect(() => {
         const carregarCompetencias = async () => {
             try {
-                const response = await fetch('https://app-matchwork-fb428e5e6c00.herokuapp.com/api/matchwork/competencias');
+                const response = await fetch('http://localhost:8080/api/matchwork/competencias');
                 if (!response.ok) {
                     throw new Error(`Erro: ${response.status}`);
                 }
@@ -34,7 +34,7 @@ const CadastroVaga = () => {
     useEffect(() => {
         const carregarVagasExistentes = async () => {
             try {
-                const response = await fetch(`https://app-matchwork-fb428e5e6c00.herokuapp.com/api/matchwork/recrutadores/${recrutadorId}/vagas`);
+                const response = await fetch(`http://localhost:8080/api/matchwork/recrutadores/${recrutadorId}/vagas`);
                 if (!response.ok) {
                     throw new Error(`Erro: ${response.status}`);
                 }
@@ -58,7 +58,7 @@ const CadastroVaga = () => {
         }
 
         try {
-            const response = await fetch(`https://app-matchwork-fb428e5e6c00.herokuapp.com/api/matchwork/recrutadores/${recrutadorId}/vagas`, {
+            const response = await fetch(`http://localhost:8080/api/matchwork/recrutadores/${recrutadorId}/vagas`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ const CadastroVaga = () => {
                 throw new Error(`Erro: ${response.status}`);
             }
             // Recarregar a lista de vagas após o cadastro
-            const vagasResponse = await fetch(`https://app-matchwork-fb428e5e6c00.herokuapp.com/api/matchwork/recrutadores/${recrutadorId}/vagas`);
+            const vagasResponse = await fetch(`http://localhost:8080/api/matchwork/recrutadores/${recrutadorId}/vagas`);
             if (!vagasResponse.ok) {
                 throw new Error(`Erro: ${vagasResponse.status}`);
             }

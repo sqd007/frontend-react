@@ -9,7 +9,7 @@ const DashboardCandidato = () => {
 
     useEffect(() => {
         if (candidatoId) {
-            fetch(`https://app-matchwork-fb428e5e6c00.herokuapp.com/api/matchwork/candidatos/${candidatoId}/vagas/match`)
+            fetch(`http://localhost:8080/api/matchwork/candidatos/${candidatoId}/vagas/match`)
                 .then(response => response.json())
                 .then(data => setVagasMatch(data))
                 .catch(error => console.error('Erro ao carregar vagas de match:', error));

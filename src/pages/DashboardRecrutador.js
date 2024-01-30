@@ -22,7 +22,7 @@ const DashboardRecrutador = () => {
         const carregarVagas = async () => {
             try {
 
-                const response = await fetch(`https://app-matchwork-fb428e5e6c00.herokuapp.com/api/matchwork/recrutadores/${recrutadorId}/vagas`);
+                const response = await fetch(`http://localhost:8080/api/matchwork/recrutadores/${recrutadorId}/vagas`);
                 if (!response.ok) {
                     throw new Error(`Erro: ${response.status}`);
                 }
